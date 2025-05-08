@@ -11,7 +11,7 @@ function index(req, res) {
         if (err) return res.status(500).json({ error: "Si è verificato un errore." });
     });
 
-    res.json(results);
+    res.json(res);
 };
 
 function show(req, res) {
@@ -80,21 +80,14 @@ function update(req, res) {
 function destroy(req, res) {
     const id = parseInt(req.params.id);
 
-    const post = posts.find(post => post.id === id);
+    const sql = 'DELETE FROM tabella WHERE id = ?';
 
-    if (!post) {
+    connection.query(sql, [id], (err, result) => {
 
-        res.status(404);
+        if (err) res.status(500).json({ error: "Qualcosa è andato storto! Riprova" });
 
-        return res.json({
-            error: "Not found",
-            message: "Errore. L'elemento è stato eliminato"
-        });
-    };
-
-    posts.splice(posts.indexOf(post), 1);
-
-    res.sendstatus(204);
+        res.sendstatus(204);
+    });
 };
 
 
