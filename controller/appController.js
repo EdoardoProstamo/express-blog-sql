@@ -1,30 +1,39 @@
 const posts = require('../data/posts');
 
+const connection = require('../data/db');
 
-function index (req, res) {
-    res.json(posts);
+
+function index(req, res) {
+
+    const sql = "SELECT * FROM `tabella`";
+
+    connection.query(sql, () => {
+        if (err) return res.status(500).json({ error: "Si è verificato un errore." });
+    });
+
+    res.json(results);
 };
 
-function show (req, res) {
+function show(req, res) {
     const id = parseInt(req.params.id);
 
     const post = posts.find(post => post.id === id);
 
     if (!post) {
-        return res.json ({
+        return res.json({
             error: "Not found",
-            message: "Errore. Nessun elemento corrispondente trovato" 
+            message: "Errore. Nessun elemento corrispondente trovato"
         });
     };
     res.json(post);
 };
 
-function modify (req, res) {
-    const {id} = req.params;
+function modify(req, res) {
+    const { id } = req.params;
     res.send(`Modifica di un post tramite id ${id}`);
 };
 
-function store (req, res) {
+function store(req, res) {
 
     const newId = posts[posts.length - 1].id + 1;
     const newPost = {
@@ -36,14 +45,14 @@ function store (req, res) {
     };
 
     console.log(newPost);
-    
+
     posts.push(newPost);
     res.status(201); // lo status 201 indica la creazione di un nuovo elemento
 
     res.json('Aggiunta nuovo post');
 };
 
-function update (req, res) {
+function update(req, res) {
     const id = parseInt(req.params.id);
 
     const post = posts.find(post => post.id === id);
@@ -52,15 +61,15 @@ function update (req, res) {
 
         res.status(404);
 
-        return res.json ({
+        return res.json({
             error: "Not found",
-            message: "Errore. L'elemento è stato eliminato" 
+            message: "Errore. L'elemento è stato eliminato"
         });
     };
 
     //Aggiornamento posts
     posts.id = req.body.id,
-    posts.title = req.body.title;
+        posts.title = req.body.title;
     posts.content = req.body.content;
     posts.image = req.body.image;
     posts.tags = req.body.tags;
@@ -68,7 +77,7 @@ function update (req, res) {
     res.send(`Modifica del post tramite id ${id}`);
 };
 
-function destroy (req, res) {
+function destroy(req, res) {
     const id = parseInt(req.params.id);
 
     const post = posts.find(post => post.id === id);
@@ -77,16 +86,16 @@ function destroy (req, res) {
 
         res.status(404);
 
-        return res.json ({
+        return res.json({
             error: "Not found",
-            message: "Errore. L'elemento è stato eliminato" 
+            message: "Errore. L'elemento è stato eliminato"
         });
     };
-    
+
     posts.splice(posts.indexOf(post), 1);
 
     res.sendstatus(204);
 };
 
 
-module.exports = { index, show, modify, store, update, destroy};
+module.exports = { index, show, modify, store, update, destroy };
