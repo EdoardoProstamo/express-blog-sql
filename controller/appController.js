@@ -5,7 +5,7 @@ const connection = require('../data/db');
 
 function index(req, res) {
 
-    const sql = "SELECT * FROM `tabella`";
+    const sql = "SELECT * FROM `posts`";
 
     connection.query(sql, () => {
         if (err) return res.status(500).json({ error: "Si è verificato un errore." });
@@ -17,7 +17,7 @@ function index(req, res) {
 function show(req, res) {
     const id = parseInt(req.params.id);
 
-    const sql = `SELECT * FROM tabella WHERE id = ?`;
+    const sql = `SELECT * FROM posts WHERE id = ?`;
 
     connection.query(sql, [id], (err, result) => {
         if (err) return res.status(500).json({ error: "Qualcosa è andato storto! Riprova" });
@@ -79,7 +79,7 @@ function update(req, res) {
 function destroy(req, res) {
     const id = parseInt(req.params.id);
 
-    const sql = 'DELETE FROM tabella WHERE id = ?';
+    const sql = 'DELETE FROM posts WHERE id = ?';
 
     connection.query(sql, [id], (err, result) => {
 
